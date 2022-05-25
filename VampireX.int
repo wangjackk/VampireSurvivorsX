@@ -150,7 +150,6 @@ def generate_hero_txt_from_original_txt(bundle_path, save_dic_path=''):
             f.write(text)
     return heroes_names
 
-
 def get_heroes_dic_with_pos(bundle_path):
     bundle = get_bundle(bundle_path=bundle_path)
     lines = get_heroes_line_with_pos(text=bundle)
@@ -265,10 +264,8 @@ class HeroesData:
 
     def save_bundle(self):
         save_dict = heroes_deletePowerUp(self.now_heroes_dict)
-
         save_dict = heroes_attrs_int_to_hex(heroes_dict=save_dict)
         hero_names = generate_hero_txt_from_original_txt(bundle_path=BundlePath, save_dic_path=HeroTxtPath)
-
         alter_heroes_attributes_by_name(new_heroes_attrs=save_dict, hero_txt_dic_path=HeroTxtPath)
         merge_heroes_txt(txt_dic=HeroTxtPath, top_heroes_end=hero_names, save_path=ChangedBundlePath)
 
@@ -789,14 +786,14 @@ class ChangeAttributeValueWindow(QWidget):
         self.okButton.clicked.connect(self.close)
         self.okButton.clicked.connect(self.changeValue)
 
-    def resizeEvent(self, event):
-        self.input.updateGeometry()
-        self.okButton.updateGeometry()
-
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Enter:
             self.close()
             self.changeValue()
+
+    def resizeEvent(self, event):
+        self.input.updateGeometry()
+        self.okButton.updateGeometry()
 
     def changeValue(self):
         value = eval(self.input.text())
@@ -808,8 +805,8 @@ class ChangeAttributeValueWindow(QWidget):
         self.attr_name = attr_name
         self.resetUI()
         x, y, w, h = geometry.x(), geometry.y(), geometry.width(), geometry.height()
-        x0 = round(x + w / 2 - self.width() / 2)
-        y0 = round(y + h / 2 - self.height() / 2)
+        x0 = round(x+w/2-self.width()/2)
+        y0 = round(y+h/2-self.height()/2)
         self.setGeometry(x0, y0, self.width(), self.height())
         if not (hero_name == 'Antonio' and attr_name in ['rerolls', 'skips', 'banish']):
             self.show()
@@ -866,11 +863,10 @@ class AttributeWindow(QGroupBox):
         p.end()
 
     def updateCurrentHeroInfo(self, name):
-        if name:
-            self.setEnabled(True)
-            self.name = name
-            self.heroAttrDict = HeroesInfo.getHero(name=name)
-            self.update()
+        self.setEnabled(True)
+        self.name = name
+        self.heroAttrDict = HeroesInfo.getHero(name=name)
+        self.update()
 
     def getAttributeYH(self):
         ry, rh = self.getAttributeRYH()
@@ -1070,11 +1066,7 @@ class Button(QPushButton):
     def updateStylesheet(self):
         font = round(self.width() / 8)
         font = f'font:{font}pt Arial;color:white;'
-        if self.bg_path:
-            img = f'border-image: url({self.bg_path});'
-            style_sheet = 'QPushButton{background:transparent;' + img + font + '}'
-        else:
-            style_sheet = self.style_sheet
+        style_sheet = 'QPushButton{background:green;border-radius:4px;' + font + '}'
         self.setStyleSheet(style_sheet)
 
     def updateGeometry(self):
@@ -1188,10 +1180,7 @@ class ChangePowerUpWindow(QWidget):
 class SetOptionWindow(QWidget):
     def __init__(self):
         super(SetOptionWindow, self).__init__()
-        if GamePath:
-            self.path = GamePath
-        else:
-            self.path = r'E:\SteamLibrary\steamapps\common\Vampire Survivors'
+        self.path = r'E:\SteamLibrary\steamapps\common\Vampire Survivors'
         self.gamePathLabel = QLabel(self)
         self.powerUpWidgets = []
         self.setGamePathButton = QPushButton('...', self)
@@ -1247,6 +1236,12 @@ class SetOptionWindow(QWidget):
 
     def resizeEvent(self, event):
         self.setGamePathButton.updateGeometry()
+
+
+def setGamePath(game_path):
+    txt_path = os.path.join(Resource_path, 'config\\pathlist.txt')
+    with open(txt_path, 'w', encoding='utf-8') as f:
+        f.write(f'GamePath={game_path}')
 
 
 def getGamePath():
