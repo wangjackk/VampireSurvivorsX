@@ -1257,7 +1257,8 @@ def getGamePath():
         for line in lines:
             name, path = line.split('=')
             if name == 'GamePath':
-                return path
+                if os.path.exists(path):
+                    return path
     return None
 
 
