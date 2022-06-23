@@ -80,7 +80,7 @@ def hero_dic_with_pos_to_hero_dic(hero_dic_with_pos):
     return _hero_dic
 
 
-def get_heroes_line_with_pos(text: str, clip_length=600, sig="'charName':"):
+def get_heroes_line_with_pos(text: str, clip_length=1000, sig="'charName':"):
     pos_all = find(text, sig=sig)
     _heroes_line = []
     for i in range(len(pos_all) - 1):
